@@ -37,6 +37,23 @@ export class UserController {
     return response.json(user)
   }
 
+  async getUsers(request: Request, response: Response) {
+    const { id } = request.params
+
+    if (request.params && id) {
+      const user = await UserModel.findById(id)
+      if (!user) {
+        throw new Error('Usuário não encontrado.')
+      }
+
+      return response.json(user)
+    }
+
+    const users = await UserModel.find()
+
+    return response.json(users)
+  }
+
   async authenticate(request: Request, response: Response) {
     const { email, password } = request.body
 
