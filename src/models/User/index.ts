@@ -12,6 +12,6 @@ const schema = new Schema<IUser>({
   email: { type: String, required: true },
   password: { type: String, required: true },
   admin: { type: Boolean, required: true, default: false }
-})
+}, { timestamps: true })
 
 export const UserModel = model<IUser>('User', schema)
