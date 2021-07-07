@@ -1,11 +1,14 @@
 import 'reflect-metadata'
 import express from 'express'
 import 'express-async-errors'
+import dotenv from 'dotenv'
 
 import { handleError } from './middlewares'
 
 import './database'
 import { router } from './routes'
+
+dotenv.config()
 
 const app = express()
 

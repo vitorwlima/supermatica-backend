@@ -6,3 +6,4 @@ export const userRoutes = Router()
 const userController = new UserController()
 
 userRoutes.post('/user', userController.createUser)
+userRoutes.post('/authenticate', userController.authenticate)

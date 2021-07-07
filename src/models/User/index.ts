@@ -14,4 +14,4 @@ const schema = new Schema<IUser>({
   admin: { type: Boolean, required: true, default: false }
 })
 
-export const UserModel = model('User', schema)
+export const UserModel = model<IUser>('User', schema)
