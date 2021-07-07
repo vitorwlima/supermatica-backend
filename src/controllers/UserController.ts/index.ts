@@ -54,6 +54,21 @@ export class UserController {
     return response.json(users)
   }
 
+  async deleteUser(request: Request, response: Response) {
+    const { id } = request.params
+
+    if (request.params && id) {
+      const user = await UserModel.findByIdAndDelete(id)
+      if (!user) {
+        throw new Error('Usuário não encontrado.')
+      }
+
+      return response.json(user)
+    }
+
+    throw new Error('Insira um ID de usuário válido.')
+  }
+
   async authenticate(request: Request, response: Response) {
     const { email, password } = request.body
 

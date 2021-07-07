@@ -12,3 +12,6 @@ userRoutes.post('/authenticate', userController.authenticate)
 // Read
 userRoutes.get('/users', userController.getUsers)
 userRoutes.get('/users/:id', userController.getUsers)
+
+// Delete
+userRoutes.delete('/user/:id', userController.deleteUser)
