@@ -1,6 +1,5 @@
 import { Router } from 'express'
 import { UserController } from '../../controllers/UserController.ts'
-import { ensureAdmin, ensureAuthenticated } from '../../middlewares'
 
 export const userRoutes = Router()
 
