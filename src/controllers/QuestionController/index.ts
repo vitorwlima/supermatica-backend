@@ -3,7 +3,7 @@ import { AlternativeModel, QuestionModel, SubjectModel } from '../../models'
 
 export class QuestionController {
   async createQuestion(request: Request, response: Response) {
-    const { questionText, subjectId } = request.body
+    const { questionText, resolution, subjectId } = request.body
 
     if (!subjectId) {
       throw new Error('Nenhuma matéria selecionada.')
@@ -13,12 +13,16 @@ export class QuestionController {
       throw new Error('Nenhuma questão inserida.')
     }
 
+    if (!resolution) {
+      throw new Error('Nenhuma resolução inserida.')
+    }
+
     const subject = await SubjectModel.findById(subjectId)
     if (!subject) {
       throw new Error('Matéria não encontrada.')
     }
 
-    const question = await new QuestionModel({ questionText, subjectId }).save()
+    const question = await new QuestionModel({ questionText, resolution, subjectId }).save()
     subject.questions.push(question._id)
     subject.save()
 
