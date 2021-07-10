@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { AlternativeModel, SubjectModel } from '../../models'
+import { AlternativeModel, QuestionModel, SubjectModel } from '../../models'
 export class SubjectController {
   async createSubject(request: Request, response: Response) {
     const { subjectText } = request.body
@@ -52,6 +52,11 @@ export class SubjectController {
     if (!subject) {
       throw new Error('Matéria não encontrada.')
     }
+
+    const questions = await QuestionModel.find({ subjectId: id })
+    await QuestionModel.deleteMany({ subjectId: id })
+
+    questions.forEach(async question => await AlternativeModel.deleteMany({ questionId: question._id }))
 
     return response.json(subject)
   }

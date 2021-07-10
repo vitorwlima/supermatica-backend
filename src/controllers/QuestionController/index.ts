@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { QuestionModel, SubjectModel } from '../../models'
+import { AlternativeModel, QuestionModel, SubjectModel } from '../../models'
 
 export class QuestionController {
   async createQuestion(request: Request, response: Response) {
@@ -62,6 +62,8 @@ export class QuestionController {
       const subject = await SubjectModel.findById(question.subjectId)
       subject.questions = subject.questions.filter(id => id.toString() !== question._id.toString())
       subject.save()
+
+      await AlternativeModel.deleteMany({ questionId: question._id })
 
       return response.json(question)
     }
