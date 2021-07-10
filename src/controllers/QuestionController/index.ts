@@ -1,0 +1,52 @@
+import { Request, Response } from 'express'
+import { QuestionModel, SubjectModel } from '../../models'
+
+export class QuestionController {
+  async createQuestion(request: Request, response: Response) {
+    const { questionText, subjectId } = request.body
+
+    if (!subjectId) {
+      throw new Error('Nenhuma matéria selecionada.')
+    }
+
+    if (!questionText) {
+      throw new Error('Nenhuma questão inserida.')
+    }
+
+    const subject = await SubjectModel.findById(subjectId)
+    if (!subject) {
+      throw new Error('Matéria não encontrada.')
+    }
+
+    const question = await new QuestionModel({ questionText, subjectId }).save()
+    subject.questions.push(question._id)
+    subject.save()
+
+    return response.json(question)
+  }
+
+  async getQuestions(request: Request, response: Response) {
+    const allQuestions = await QuestionModel.find()
+
+    return response.json(allQuestions)
+  }
+
+  async deleteQuestion(request: Request, response: Response) {
+    const { id } = request.params
+
+    if (request.params && id) {
+      const question = await QuestionModel.findByIdAndDelete(id)
+      if (!question) {
+        throw new Error('Pergunta não encontrada.')
+      }
+
+      const subject = await SubjectModel.findById(question.subjectId)
+      subject.questions = subject.questions.filter(id => id.toString() !== question._id.toString())
+      subject.save()
+
+      return response.json(question)
+    }
+
+    throw new Error('Pergunta não encontrada.')
+  }
+}
