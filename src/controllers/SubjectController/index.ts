@@ -12,22 +12,6 @@ export class SubjectController {
     return response.json(subject)
   }
 
-  async updateSubject(request: Request, response: Response) {
-    const { id } = request.params
-    const { subjectText } = request.body
-
-    if (!subjectText) {
-      throw new Error('Insira uma matéria válida.')
-    }
-
-    const subject = await SubjectModel.findByIdAndUpdate(id, { subjectText }, { new: true, runValidators: true })
-    if (!subject) {
-      throw new Error('Matéria não encontrada.')
-    }
-
-    return response.json(subject)
-  }
-
   async getSubject(request: Request, response: Response) {
     const { id } = request.params
 
@@ -43,6 +27,22 @@ export class SubjectController {
     const subjects = await SubjectModel.find()
 
     return response.json(subjects)
+  }
+
+  async updateSubject(request: Request, response: Response) {
+    const { id } = request.params
+    const { subjectText } = request.body
+
+    if (!subjectText) {
+      throw new Error('Insira uma matéria válida.')
+    }
+
+    const subject = await SubjectModel.findByIdAndUpdate(id, { subjectText }, { new: true, runValidators: true })
+    if (!subject) {
+      throw new Error('Matéria não encontrada.')
+    }
+
+    return response.json(subject)
   }
 
   async deleteSubject(request: Request, response: Response) {
