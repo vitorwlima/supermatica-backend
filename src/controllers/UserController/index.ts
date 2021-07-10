@@ -1,5 +1,5 @@
-import { Request, Response } from 'express';
-import { UserModel } from '../../models';
+import { Request, Response } from 'express'
+import { UserModel } from '../../models'
 
 import { compare, hash } from 'bcryptjs'
 import { sign } from 'jsonwebtoken'
@@ -20,7 +20,7 @@ export class UserController {
     if (!password) {
       throw new Error('Insira uma senha válida.')
     }
-    
+
     if (password && password.length < 6) {
       throw new Error('Sua senha precisa ter 6 caracteres no mínimo.')
     }
@@ -33,7 +33,7 @@ export class UserController {
     const passwordHash = await hash(password, 8)
 
     const user = await new UserModel({ name, email, password: passwordHash, admin }).save()
-    
+
     return response.json(user)
   }
 
@@ -52,6 +52,14 @@ export class UserController {
     const users = await UserModel.find()
 
     return response.json(users)
+  }
+
+  async getAdmin(request: Request, response: Response) {
+    const { user_id } = request
+
+    const user = await UserModel.findById(user_id)
+
+    return response.json(user)
   }
 
   async deleteUser(request: Request, response: Response) {
@@ -80,6 +88,29 @@ export class UserController {
     const passwordMatch = await compare(password, user.password)
     if (!passwordMatch) {
       throw new Error('Senha incorreta.')
+    }
+
+    const token = sign({ email }, process.env.TOKEN_HASH, { subject: user._id.toString(), expiresIn: '1d' })
+
+    return response.json(token)
+  }
+
+  async authenticateAdmin(request: Request, response: Response) {
+    const { email, password } = request.body
+
+    const user = await UserModel.findOne({ email })
+    if (!user) {
+      throw new Error('Email não cadastrado.')
+    }
+
+    const passwordMatch = await compare(password, user.password)
+    if (!passwordMatch) {
+      throw new Error('Senha incorreta.')
+    }
+
+    const isAdmin = user.admin
+    if (!isAdmin) {
+      throw new Error('Usuário não autorizado.')
     }
 
     const token = sign({ email }, process.env.TOKEN_HASH, { subject: user._id.toString(), expiresIn: '1d' })
