@@ -3,6 +3,7 @@ import { Schema, model } from 'mongoose'
 interface IQuestion {
   questionText: string
   subjectId: Schema.Types.ObjectId
+  alternatives: Schema.Types.ObjectId[]
 }
 
 const schema = new Schema<IQuestion>(
