@@ -25,7 +25,26 @@ export class QuestionController {
     return response.json(question)
   }
 
+  async getQuestion(request: Request, response: Response) {
+    const { id } = request.params
+
+    const question = await QuestionModel.findById(id).populate('alternatives')
+    if (!question) {
+      throw new Error('Pergunta não encontrada.')
+    }
+
+    return response.json(question)
+  }
+
   async getQuestions(request: Request, response: Response) {
+    const { subjectId } = request.params
+
+    if (request.params && subjectId) {
+      const question = await QuestionModel.find({ subjectId })
+
+      return response.json(question)
+    }
+
     const allQuestions = await QuestionModel.find()
 
     return response.json(allQuestions)

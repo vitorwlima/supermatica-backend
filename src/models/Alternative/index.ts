@@ -1,16 +1,16 @@
-import { Schema, model } from 'mongoose'
+import { Schema, model, Types } from 'mongoose'
 
 interface IAlternative {
   alternativeText: string
   isCorrect: boolean
-  questionId: Schema.Types.ObjectId
+  questionId: Types.ObjectId
 }
 
 const schema = new Schema<IAlternative>(
   {
     alternativeText: { type: String, required: true },
     isCorrect: { type: Boolean, required: true },
-    questionId: { type: Schema.Types.ObjectId, ref: 'Question' },
+    questionId: { type: Types.ObjectId, ref: 'Question' },
   },
   { timestamps: true }
 )

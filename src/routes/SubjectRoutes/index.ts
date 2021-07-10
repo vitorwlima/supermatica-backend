@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { SubjectController } from '../../controllers/SubjectController'
-import { ensureAdmin } from '../../middlewares'
+import { ensureAdmin, ensureAuthenticated } from '../../middlewares'
 
 export const subjectRoutes = Router()
 
@@ -10,8 +10,8 @@ const subjectController = new SubjectController()
 subjectRoutes.post('/subject', ensureAdmin, subjectController.createSubject)
 
 // Read
-subjectRoutes.get('/subjects/:id', ensureAdmin, subjectController.getSubject)
-subjectRoutes.get('/subjects', ensureAdmin, subjectController.getSubject)
+subjectRoutes.get('/subjects/:id', ensureAuthenticated, subjectController.getSubject)
+subjectRoutes.get('/subjects', ensureAuthenticated, subjectController.getSubject)
 
 // Update
 subjectRoutes.put('/subject/:id', ensureAdmin, subjectController.updateSubject)

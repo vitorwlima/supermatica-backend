@@ -9,6 +9,8 @@ const questionController = new QuestionController()
 questionRoutes.post('/question', questionController.createQuestion)
 
 // Read
+questionRoutes.get('/question/:id', questionController.getQuestion)
+questionRoutes.get('/questions/:subjectId', questionController.getQuestions)
 questionRoutes.get('/questions', questionController.getQuestions)
 
 // Delete
