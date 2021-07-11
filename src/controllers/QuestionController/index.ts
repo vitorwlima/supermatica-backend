@@ -54,6 +54,15 @@ export class QuestionController {
     return response.json(allQuestions)
   }
 
+  async updateQuestion(request: Request, response: Response) {
+    const { id } = request.params
+    const data = request.body
+
+    const question = await QuestionModel.findByIdAndUpdate(id, data, { new: true, runValidators: true })
+
+    return response.json(question)
+  }
+
   async deleteQuestion(request: Request, response: Response) {
     const { id } = request.params
 

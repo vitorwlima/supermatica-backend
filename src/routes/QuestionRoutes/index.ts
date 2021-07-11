@@ -13,5 +13,8 @@ questionRoutes.get('/question/:id', questionController.getQuestion)
 questionRoutes.get('/questions/:subjectId', questionController.getQuestions)
 questionRoutes.get('/questions', questionController.getQuestions)
 
+// Update
+questionRoutes.put('/question/:id', questionController.updateQuestion)
+
 // Delete
 questionRoutes.delete('/question/:id', questionController.deleteQuestion)
