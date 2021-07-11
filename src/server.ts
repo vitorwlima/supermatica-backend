@@ -18,4 +18,4 @@ app.use(express.json())
 app.use(router)
 app.use(handleError)
 
-app.listen(3333, () => console.log('SERVER IS RUNNING'))
+app.listen(process.env.PORT || 80, () => console.log('SERVER IS RUNNING'))
