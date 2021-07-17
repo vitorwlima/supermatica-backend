@@ -8,8 +8,6 @@ const userController = new UserController()
 
 // Create
 userRoutes.post('/user', userController.createUser)
-userRoutes.post('/authenticate', userController.authenticate)
-userRoutes.post('/authenticateAdmin', userController.authenticateAdmin)
 
 // Read
 userRoutes.get('/users', userController.getUsers)

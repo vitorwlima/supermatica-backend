@@ -1,8 +1,7 @@
 import { Request, Response } from 'express'
-import { UserModel } from '../../models'
+import { hash } from 'bcryptjs'
 
-import { compare, hash } from 'bcryptjs'
-import { sign } from 'jsonwebtoken'
+import { UserModel } from '../../models'
 
 export class UserController {
   async createUser(request: Request, response: Response) {
@@ -41,7 +40,7 @@ export class UserController {
     const { id } = request.params
 
     if (request.params && id) {
-      const user = await UserModel.findById(id)
+      const user = await await UserModel.findById(id)
       if (!user) {
         throw new Error('Usuário não encontrado.')
       }
@@ -75,46 +74,5 @@ export class UserController {
     }
 
     throw new Error('Insira um ID de usuário válido.')
-  }
-
-  async authenticate(request: Request, response: Response) {
-    const { email, password } = request.body
-
-    const user = await UserModel.findOne({ email })
-    if (!user) {
-      throw new Error('Email não cadastrado.')
-    }
-
-    const passwordMatch = await compare(password, user.password)
-    if (!passwordMatch) {
-      throw new Error('Senha incorreta.')
-    }
-
-    const token = sign({ email }, process.env.TOKEN_HASH, { subject: user._id.toString(), expiresIn: '1d' })
-
-    return response.json(token)
-  }
-
-  async authenticateAdmin(request: Request, response: Response) {
-    const { email, password } = request.body
-
-    const user = await UserModel.findOne({ email })
-    if (!user) {
-      throw new Error('Email não cadastrado.')
-    }
-
-    const passwordMatch = await compare(password, user.password)
-    if (!passwordMatch) {
-      throw new Error('Senha incorreta.')
-    }
-
-    const isAdmin = user.admin
-    if (!isAdmin) {
-      throw new Error('Usuário não autorizado.')
-    }
-
-    const token = sign({ email }, process.env.TOKEN_HASH, { subject: user._id.toString(), expiresIn: '1d' })
-
-    return response.json(token)
   }
 }
