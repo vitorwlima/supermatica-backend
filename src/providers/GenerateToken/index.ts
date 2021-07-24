@@ -2,23 +2,8 @@ import dayjs from 'dayjs'
 import { sign } from 'jsonwebtoken'
 import { RefreshTokenModel, UserModel } from '../../models'
 
-interface IAccessTokenProps {
-  email?: string
-  userId: string
-}
-
-export const generateAccessToken = async ({ email, userId }: IAccessTokenProps) => {
-  let useEmail = email || ''
-  if (!email) {
-    const user = await UserModel.findById(userId)
-    if (!user) {
-      throw new Error('Usuário inválido.')
-    }
-
-    useEmail = user.email
-  }
-
-  const accessToken = sign({ email: useEmail }, process.env.TOKEN_HASH, { subject: userId.toString(), expiresIn: '1d' })
+export const generateAccessToken = (userId: string) => {
+  const accessToken = sign({}, process.env.TOKEN_HASH, { subject: userId.toString(), expiresIn: '15m' })
 
   return accessToken
 }

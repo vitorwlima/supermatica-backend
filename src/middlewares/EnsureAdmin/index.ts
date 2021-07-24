@@ -13,16 +13,18 @@ export const ensureAdmin = async (request: Request, response: Response, next: Ne
     return response.status(401).end()
   }
 
-  const userInfo = verify(token, process.env.TOKEN_HASH)
+  try {
+    const userInfo = verify(token, process.env.TOKEN_HASH)
 
-  request.user_id = userInfo.sub as string
+    request.user_id = userInfo.sub as string
 
-  const { admin } = await UserModel.findById(request.user_id)
-  if (admin) {
-    return next()
+    const { admin } = await UserModel.findById(request.user_id)
+    if (admin) {
+      return next()
+    }
+
+    return response.status(401).end()
+  } catch {
+    return response.status(401).end()
   }
-
-  return response.status(401).json({
-    error: 'Usuário não autorizado.',
-  })
 }

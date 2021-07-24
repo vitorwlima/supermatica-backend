@@ -21,10 +21,10 @@ export class AuthController {
 
     await RefreshTokenModel.deleteMany({ userId: user._id })
 
-    const token = await generateAccessToken({ email, userId: user._id })
+    const token = generateAccessToken(user._id)
     const refreshToken = await generateRefreshToken(user._id.toString())
 
-    return response.json({ token })
+    return response.json({ user, token, refreshToken })
   }
 
   async authenticateAdmin(request: Request, response: Response) {
@@ -47,10 +47,10 @@ export class AuthController {
 
     await RefreshTokenModel.deleteMany({ userId: user._id })
 
-    const token = await generateAccessToken({ email, userId: user._id })
+    const token = generateAccessToken(user._id)
     const refreshToken = await generateRefreshToken(user._id.toString())
 
-    return response.json({ token })
+    return response.json({ user, token, refreshToken })
   }
 
   async getTokenByRefresh(request: Request, response: Response) {
@@ -61,17 +61,16 @@ export class AuthController {
       throw new Error('Refresh token inválido.')
     }
 
-    const token = await generateAccessToken({ userId: refreshToken.userId.toString() })
+    const token = generateAccessToken(refreshToken.userId.toString())
 
     const refreshTokenExpired = dayjs().isAfter(dayjs.unix(refreshToken.expiresIn))
     if (refreshTokenExpired) {
-      await RefreshTokenModel.deleteMany({ userId: refreshToken.userId.toString() }) 
+      await RefreshTokenModel.deleteMany({ userId: refreshToken.userId.toString() })
 
       const newRefreshToken = await generateRefreshToken(refreshToken.userId.toString())
 
       return response.json({ token, refreshToken: newRefreshToken })
     }
-
 
     return response.json({ token })
   }

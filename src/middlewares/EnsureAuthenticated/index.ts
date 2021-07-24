@@ -5,7 +5,7 @@ export const ensureAuthenticated = (request: Request, response: Response, next: 
   if (!request.headers.authorization) {
     throw new Error('Usuário precisa estar logado.')
   }
-  
+
   const token = request.headers.authorization.replace('Bearer ', '')
 
   if (!token) {
