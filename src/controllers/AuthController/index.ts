@@ -79,4 +79,9 @@ export class AuthController {
 
     return response.json({ user, token, refreshToken: newRefreshToken })
   }
+
+  async logout(request: Request, response: Response) {
+    response.cookie('refreshToken', '', { httpOnly: true })
+    return response.end()
+  }
 }

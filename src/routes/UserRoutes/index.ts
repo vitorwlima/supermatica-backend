@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { UserController } from '../../controllers/UserController'
-import { ensureAdmin } from '../../middlewares'
+import { ensureAdmin, ensureAuthenticated } from '../../middlewares'
 
 export const userRoutes = Router()
 
@@ -13,6 +13,9 @@ userRoutes.post('/user', userController.createUser)
 userRoutes.get('/users', userController.getUsers)
 userRoutes.get('/users/:id', userController.getUsers)
 userRoutes.get('/admin', ensureAdmin, userController.getAdmin)
+
+// Update
+userRoutes.put('/user-name', ensureAuthenticated, userController.updateUserName)
 
 // Delete
 userRoutes.delete('/user/:id', userController.deleteUser)

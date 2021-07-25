@@ -11,3 +11,4 @@ authRoutes.post('/authenticateAdmin', authController.authenticateAdmin)
 
 // Read
 authRoutes.get('/refresh-token', authController.getTokenByRefresh)
+authRoutes.get('/logout', authController.logout)

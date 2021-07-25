@@ -5,7 +5,6 @@ import { UserModel } from '../../models'
 
 export class UserController {
   async createUser(request: Request, response: Response) {
-    const data = request.body
     const { name, email, password, admin } = request.body
 
     if (!name) {
@@ -33,6 +32,15 @@ export class UserController {
 
     const user = await new UserModel({ name, email, password: passwordHash, admin }).save()
 
+    return response.json(user)
+  }
+
+  async updateUserName(request: Request, response: Response) {
+    const { user_id } = request
+    const { name } = request.params
+
+    console.log(user_id, name)
+    const user = await UserModel.findByIdAndUpdate(user_id, { name }, { new: true, runValidators: true })
     return response.json(user)
   }
 
