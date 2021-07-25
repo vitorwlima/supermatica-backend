@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
     "dayjs": "^1.10.6",
     "dotenv": "^10.0.0",
@@ -24,6 +25,7 @@
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.2",
+    "@types/cookie-parser": "^1.4.2",
     "@types/express": "^4.17.12",
     "@types/jsonwebtoken": "^8.5.4",
     "@types/mongoose": "^5.11.97",

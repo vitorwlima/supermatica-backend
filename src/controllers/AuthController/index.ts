@@ -24,6 +24,8 @@ export class AuthController {
     const token = generateAccessToken(user._id)
     const refreshToken = await generateRefreshToken(user._id.toString())
 
+    response.cookie('refreshToken', refreshToken._id.toString(), { httpOnly: true })
+
     return response.json({ user, token, refreshToken })
   }
 
@@ -54,24 +56,27 @@ export class AuthController {
   }
 
   async getTokenByRefresh(request: Request, response: Response) {
-    const { refreshTokenId } = request.params
+    const refreshTokenId = request.cookies.refreshToken
 
     const refreshToken = await RefreshTokenModel.findById(refreshTokenId)
     if (!refreshToken) {
       throw new Error('Refresh token inválido.')
     }
 
+    const user = await UserModel.findById(refreshToken.userId)
+
+    await RefreshTokenModel.deleteMany({ userId: refreshToken.userId.toString() })
+    const newRefreshToken = await generateRefreshToken(refreshToken.userId.toString())
+
     const token = generateAccessToken(refreshToken.userId.toString())
 
     const refreshTokenExpired = dayjs().isAfter(dayjs.unix(refreshToken.expiresIn))
     if (refreshTokenExpired) {
-      await RefreshTokenModel.deleteMany({ userId: refreshToken.userId.toString() })
-
-      const newRefreshToken = await generateRefreshToken(refreshToken.userId.toString())
-
-      return response.json({ token, refreshToken: newRefreshToken })
+      return response.status(401).end()
     }
 
-    return response.json({ token })
+    response.cookie('refreshToken', newRefreshToken._id.toString(), { httpOnly: true })
+
+    return response.json({ user, token, refreshToken: newRefreshToken })
   }
 }

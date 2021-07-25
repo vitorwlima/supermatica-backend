@@ -10,4 +10,4 @@ authRoutes.post('/authenticate', authController.authenticate)
 authRoutes.post('/authenticateAdmin', authController.authenticateAdmin)
 
 // Read
-authRoutes.get('/refresh-token/:refreshTokenId', authController.getTokenByRefresh)
+authRoutes.get('/refresh-token', authController.getTokenByRefresh)
