@@ -37,9 +37,8 @@ export class UserController {
 
   async updateUserName(request: Request, response: Response) {
     const { user_id } = request
-    const { name } = request.params
+    const { name } = request.body
 
-    console.log(user_id, name)
     const user = await UserModel.findByIdAndUpdate(user_id, { name }, { new: true, runValidators: true })
     return response.json(user)
   }
