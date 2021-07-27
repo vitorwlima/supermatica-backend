@@ -8,6 +8,12 @@ export const generateAccessToken = (userId: string) => {
   return accessToken
 }
 
+export const generateConfirmationToken = (userId: string) => {
+  const accessToken = sign({}, process.env.TOKEN_HASH, { subject: userId.toString(), expiresIn: '1d' })
+
+  return accessToken
+}
+
 export const generateRefreshToken = async (userId: string) => {
   const expiresIn = dayjs().add(7, 'day').unix()
 

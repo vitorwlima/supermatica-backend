@@ -1,40 +1,8 @@
 import { Request, Response } from 'express'
-import { hash } from 'bcryptjs'
 
 import { UserModel } from '../../models'
 
 export class UserController {
-  async createUser(request: Request, response: Response) {
-    const { name, email, password, admin } = request.body
-
-    if (!name) {
-      throw new Error('Insira um nome válido.')
-    }
-
-    if (!email) {
-      throw new Error('Insira um email válido.')
-    }
-
-    if (!password) {
-      throw new Error('Insira uma senha válida.')
-    }
-
-    if (password && password.length < 6) {
-      throw new Error('Sua senha precisa ter 6 caracteres no mínimo.')
-    }
-
-    const userAlreadyExists = await UserModel.findOne({ email })
-    if (userAlreadyExists) {
-      throw new Error('Usuário já cadastrado.')
-    }
-
-    const passwordHash = await hash(password, 8)
-
-    const user = await new UserModel({ name, email, password: passwordHash, admin }).save()
-
-    return response.json(user)
-  }
-
   async updateUserName(request: Request, response: Response) {
     const { user_id } = request
     const { name } = request.body

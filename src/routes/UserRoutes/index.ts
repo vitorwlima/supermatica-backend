@@ -6,9 +6,6 @@ export const userRoutes = Router()
 
 const userController = new UserController()
 
-// Create
-userRoutes.post('/user', userController.createUser)
-
 // Read
 userRoutes.get('/users', userController.getUsers)
 userRoutes.get('/users/:id', userController.getUsers)
