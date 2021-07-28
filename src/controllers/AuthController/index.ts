@@ -49,7 +49,7 @@ export class AuthController {
 
     const user = await UserModel.findByIdAndUpdate(user_id, { confirmed: true })
     if (user.confirmed) {
-      return response.end()
+      throw new Error('Usuário já confirmado.')
     }
 
     await RefreshTokenModel.deleteMany({ userId: user._id })
