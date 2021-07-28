@@ -3,7 +3,12 @@ import { compare, hash } from 'bcryptjs'
 import dayjs from 'dayjs'
 
 import { RefreshTokenModel, UserModel } from '../../models'
-import { generateAccessToken, generateConfirmationToken, generateRefreshToken, sendConfirmationEmail } from '../../providers'
+import {
+  generateAccessToken,
+  generateConfirmationToken,
+  generateRefreshToken,
+  sendConfirmationEmail,
+} from '../../providers'
 
 export class AuthController {
   async register(request: Request, response: Response) {
@@ -34,7 +39,7 @@ export class AuthController {
     const user = await new UserModel({ name, email, password: passwordHash }).save()
     const token = generateConfirmationToken(user._id)
 
-    await sendConfirmationEmail({ email, token })
+    await sendConfirmationEmail({ email, name: user.name, token })
 
     return response.end()
   }
@@ -54,7 +59,7 @@ export class AuthController {
 
     response.cookie('refreshToken', refreshToken._id.toString(), { httpOnly: true })
 
-    return response.json({ user, token, refreshToken })
+    return response.json({ user, token })
   }
 
   async authenticate(request: Request, response: Response) {
@@ -72,12 +77,18 @@ export class AuthController {
 
     await RefreshTokenModel.deleteMany({ userId: user._id })
 
+    if (!user.confirmed) {
+      const confirmToken = generateConfirmationToken(user._id)
+      await sendConfirmationEmail({ email, name: user.name, token: confirmToken })
+      throw new Error('Sua conta não foi confirmada. Um novo email para confirmação foi enviado.')
+    }
+
     const token = generateAccessToken(user._id)
     const refreshToken = await generateRefreshToken(user._id.toString())
 
     response.cookie('refreshToken', refreshToken._id.toString(), { httpOnly: true })
 
-    return response.json({ user, token, refreshToken })
+    return response.json({ user, token })
   }
 
   async authenticateAdmin(request: Request, response: Response) {
@@ -101,9 +112,9 @@ export class AuthController {
     await RefreshTokenModel.deleteMany({ userId: user._id })
 
     const token = generateAccessToken(user._id)
-    const refreshToken = await generateRefreshToken(user._id.toString())
+    await generateRefreshToken(user._id.toString())
 
-    return response.json({ user, token, refreshToken })
+    return response.json({ user, token })
   }
 
   async getTokenByRefresh(request: Request, response: Response) {
@@ -128,7 +139,7 @@ export class AuthController {
 
     response.cookie('refreshToken', newRefreshToken._id.toString(), { httpOnly: true })
 
-    return response.json({ user, token, refreshToken: newRefreshToken })
+    return response.json({ user, token })
   }
 
   async logout(request: Request, response: Response) {
