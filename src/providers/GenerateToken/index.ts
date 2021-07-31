@@ -9,9 +9,15 @@ export const generateAccessToken = (userId: string) => {
 }
 
 export const generateConfirmationToken = (userId: string) => {
-  const accessToken = sign({}, process.env.TOKEN_HASH, { subject: userId.toString(), expiresIn: '1d' })
+  const confirmationToken = sign({}, process.env.TOKEN_HASH, { subject: userId.toString(), expiresIn: '1d' })
 
-  return accessToken
+  return confirmationToken
+}
+
+export const generateChangePasswordToken = (userId: string) => {
+  const changePasswordToken = sign({}, process.env.TOKEN_HASH, { subject: userId.toString(), expiresIn: '1h' })
+
+  return changePasswordToken
 }
 
 export const generateRefreshToken = async (userId: string) => {
