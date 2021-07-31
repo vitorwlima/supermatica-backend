@@ -9,7 +9,6 @@ const authController = new AuthController()
 // Create
 authRoutes.post('/register', authController.register)
 authRoutes.post('/authenticate', authController.authenticate)
-authRoutes.post('/authenticateAdmin', authController.authenticateAdmin)
 
 // Read
 authRoutes.get('/refresh-token', authController.getTokenByRefresh)

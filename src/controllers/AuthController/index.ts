@@ -91,32 +91,6 @@ export class AuthController {
     return response.json({ user, token })
   }
 
-  async authenticateAdmin(request: Request, response: Response) {
-    const { email, password } = request.body
-
-    const user = await UserModel.findOne({ email })
-    if (!user) {
-      throw new Error('Email não cadastrado.')
-    }
-
-    const passwordMatch = await compare(password, user.password)
-    if (!passwordMatch) {
-      throw new Error('Senha incorreta.')
-    }
-
-    const isAdmin = user.admin
-    if (!isAdmin) {
-      throw new Error('Usuário não autorizado.')
-    }
-
-    await RefreshTokenModel.deleteMany({ userId: user._id })
-
-    const token = generateAccessToken(user._id)
-    await generateRefreshToken(user._id.toString())
-
-    return response.json({ user, token })
-  }
-
   async getTokenByRefresh(request: Request, response: Response) {
     const refreshTokenId = request.cookies.refreshToken
 
