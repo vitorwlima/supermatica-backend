@@ -2,6 +2,7 @@ import nodemailer from 'nodemailer'
 import { changePasswordEmailHTML } from './changePasswordEmailHTML'
 import { confirmationEmailHTML } from './confirmationEmailHTML'
 import { contactMessageHTML } from './contactMessageHTML'
+import { forgotPasswordEMailHTML } from './forgotPasswordEmailHTML'
 
 interface ISendConfirmationEmailProps {
   email: string
@@ -60,6 +61,17 @@ export const sendChangePasswordEmail = async ({ email, name, token }: ISendChang
     to: email,
     subject: 'Supermática - Troca de senha',
     html: changePasswordEmailHTML({ name, token }),
+  })
+
+  return info
+}
+
+export const sendForgotPasswordEmail = async ({ email, name, token }: ISendChangePasswordEmailProps) => {
+  const info = await transport.sendMail({
+    from: `Contato Supermática <contato@supermatica.com.br>`,
+    to: email,
+    subject: 'Supermática - Redefinição de senha',
+    html: forgotPasswordEMailHTML({ name, token }),
   })
 
   return info

@@ -1,9 +1,9 @@
-interface IChangePasswordEmailHTMLProps {
+interface IForgotPasswordEMailHTMLProps {
   name: string
   token: string
 }
 
-export const changePasswordEmailHTML = ({ name, token }: IChangePasswordEmailHTMLProps) => {
+export const forgotPasswordEMailHTML = ({ name, token }: IForgotPasswordEMailHTMLProps) => {
   const html = `
     <html>
       <head>
@@ -60,8 +60,8 @@ export const changePasswordEmailHTML = ({ name, token }: IChangePasswordEmailHTM
           </a>
           <div>
             <h1>Olá, ${name}!</h1>
-            <p>Você enviou um pedido para trocar sua senha de acesso à plataforma. Clique no botão abaixo para redefinir sua senha.</p>
-            <a href="${process.env.ORIGIN}/alterar-senha/${token}">
+            <p>Você enviou um pedido pois esqueceu sua senha de acesso à plataforma. Clique no botão abaixo para redefinir sua senha.</p>
+            <a href="${process.env.ORIGIN}/esqueci-senha/${token}">
             <div class="button">Redefinir senha</div>
             </a>
           </div>
