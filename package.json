@@ -21,6 +21,7 @@
     "mongoose": "^5.13.2",
     "nodemailer": "^6.6.3",
     "reflect-metadata": "^0.1.13",
+    "slugify": "^1.6.0",
     "ts-node": "^10.1.0",
     "typescript": "^4.3.5"
   },

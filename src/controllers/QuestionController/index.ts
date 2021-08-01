@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { AlternativeModel, QuestionModel, SubjectModel } from '../../models'
+import { AlternativeModel, QuestionModel, SubjectModel, UserModel } from '../../models'
 
 export class QuestionController {
   async createQuestion(request: Request, response: Response) {
@@ -43,15 +43,9 @@ export class QuestionController {
   async getQuestions(request: Request, response: Response) {
     const { subjectId } = request.params
 
-    if (request.params && subjectId) {
-      const question = await QuestionModel.find({ subjectId })
+    const questions = await QuestionModel.find({ subjectId })
 
-      return response.json(question)
-    }
-
-    const allQuestions = await QuestionModel.find()
-
-    return response.json(allQuestions)
+    return response.json(questions)
   }
 
   async updateQuestion(request: Request, response: Response) {
@@ -82,5 +76,21 @@ export class QuestionController {
     }
 
     throw new Error('Pergunta não encontrada.')
+  }
+
+  async answerQuestion(request: Request, response: Response) {
+    const { user_id } = request
+    const { questionId, isCorrect } = request.body
+
+    const user = await UserModel.findById(user_id)
+    if (user.answeredQuestions.some(question => question.questionId === questionId)) {
+      return response.end()
+    }
+
+    const answeredQuestion = { questionId, isCorrect }
+    user.answeredQuestions.push(answeredQuestion)
+    user.save()
+
+    return response.end()
   }
 }

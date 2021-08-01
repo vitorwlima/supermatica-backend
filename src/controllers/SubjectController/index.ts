@@ -1,4 +1,5 @@
 import { Request, Response } from 'express'
+import slugify from 'slugify'
 import { AlternativeModel, QuestionModel, SubjectModel } from '../../models'
 export class SubjectController {
   async createSubject(request: Request, response: Response) {
@@ -7,7 +8,9 @@ export class SubjectController {
       throw new Error('Insira uma matéria válida.')
     }
 
-    const subject = await new SubjectModel({ subjectText }).save()
+    const slug = slugify(subjectText, { lower: true })
+
+    const subject = await new SubjectModel({ subjectText, slug }).save()
 
     return response.json(subject)
   }
@@ -37,7 +40,9 @@ export class SubjectController {
       throw new Error('Insira uma matéria válida.')
     }
 
-    const subject = await SubjectModel.findByIdAndUpdate(id, { subjectText }, { new: true, runValidators: true })
+    const slug = slugify(subjectText, { lower: true })
+
+    const subject = await SubjectModel.findByIdAndUpdate(id, { subjectText, slug }, { new: true, runValidators: true })
     if (!subject) {
       throw new Error('Matéria não encontrada.')
     }
