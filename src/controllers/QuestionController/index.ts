@@ -53,6 +53,8 @@ export class QuestionController {
     const data = request.body
 
     const question = await QuestionModel.findByIdAndUpdate(id, data, { new: true, runValidators: true })
+    question.alternatives = []
+    question.save()
 
     return response.json(question)
   }

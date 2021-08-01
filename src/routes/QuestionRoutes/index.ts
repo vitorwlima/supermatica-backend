@@ -11,8 +11,8 @@ questionRoutes.post('/question', ensureAdmin, questionController.createQuestion)
 questionRoutes.post('/question-answer', ensureAuthenticated, questionController.answerQuestion)
 
 // Read
-questionRoutes.get('/question/:id', questionController.getQuestion)
-questionRoutes.get('/questions/:subjectId', questionController.getQuestions)
+questionRoutes.get('/question/:id', ensureAuthenticated, questionController.getQuestion)
+questionRoutes.get('/questions/:subjectId', ensureAuthenticated, questionController.getQuestions)
 
 // Update
 questionRoutes.put('/question/:id', ensureAdmin, questionController.updateQuestion)

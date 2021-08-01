@@ -26,9 +26,6 @@ export class AlternativeController {
 
     if (request.params && id) {
       const alternative = await AlternativeModel.findByIdAndDelete(id)
-      if (!alternative) {
-        throw new Error('Alternativa não encontrada.')
-      }
 
       const question = await QuestionModel.findById(alternative.questionId)
       question.alternatives = question.alternatives.filter(id => id.toString() !== alternative._id.toString())

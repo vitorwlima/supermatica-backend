@@ -16,10 +16,10 @@ export class SubjectController {
   }
 
   async getSubject(request: Request, response: Response) {
-    const { id } = request.params
+    const { slug } = request.params
 
-    if (request.params && id) {
-      const subject = await SubjectModel.findById(id).populate('questions')
+    if (request.params && slug) {
+      const subject = await SubjectModel.findOne({ slug }).populate('questions')
       if (!subject) {
         throw new Error('Matéria não encontrada.')
       }

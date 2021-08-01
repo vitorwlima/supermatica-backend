@@ -10,7 +10,7 @@ const subjectController = new SubjectController()
 subjectRoutes.post('/subject', ensureAdmin, subjectController.createSubject)
 
 // Read
-subjectRoutes.get('/subjects/:id', ensureAuthenticated, subjectController.getSubject)
+subjectRoutes.get('/subjects/:slug', ensureAuthenticated, subjectController.getSubject)
 subjectRoutes.get('/subjects', ensureAuthenticated, subjectController.getSubject)
 
 // Update
