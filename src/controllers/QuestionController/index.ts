@@ -41,9 +41,11 @@ export class QuestionController {
   }
 
   async getQuestions(request: Request, response: Response) {
-    const { subjectId } = request.params
+    const { slug } = request.params
 
-    const questions = await QuestionModel.find({ subjectId })
+    const subject = await SubjectModel.findOne({ slug })
+
+    const questions = await QuestionModel.find({ subjectId: subject._id })
 
     return response.json(questions)
   }

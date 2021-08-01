@@ -12,7 +12,7 @@ questionRoutes.post('/question-answer', ensureAuthenticated, questionController.
 
 // Read
 questionRoutes.get('/question/:id', ensureAuthenticated, questionController.getQuestion)
-questionRoutes.get('/questions/:subjectId', ensureAuthenticated, questionController.getQuestions)
+questionRoutes.get('/questions/:slug', ensureAuthenticated, questionController.getQuestions)
 
 // Update
 questionRoutes.put('/question/:id', ensureAdmin, questionController.updateQuestion)
