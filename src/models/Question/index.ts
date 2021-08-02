@@ -5,6 +5,7 @@ interface IQuestion {
   resolution: string
   alternatives: Types.ObjectId[]
   subjectId: Types.ObjectId
+  tags: string[]
 }
 
 const schema = new Schema<IQuestion>(
@@ -13,6 +14,7 @@ const schema = new Schema<IQuestion>(
     resolution: { type: String, required: true },
     alternatives: [{ type: Types.ObjectId, ref: 'Alternative' }],
     subjectId: { type: Types.ObjectId, ref: 'Subject' },
+    tags: [{ type: String, required: true, default: [] }],
   },
   { timestamps: true }
 )

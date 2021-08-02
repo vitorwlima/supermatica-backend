@@ -3,26 +3,16 @@ import { AlternativeModel, QuestionModel, SubjectModel, UserModel } from '../../
 
 export class QuestionController {
   async createQuestion(request: Request, response: Response) {
-    const { questionText, resolution, subjectId } = request.body
-
-    if (!subjectId) {
-      throw new Error('Nenhuma matéria selecionada.')
-    }
-
-    if (!questionText) {
-      throw new Error('Nenhuma questão inserida.')
-    }
-
-    if (!resolution) {
-      throw new Error('Nenhuma resolução inserida.')
-    }
+    const { questionText, resolution, subjectId, tags } = request.body
 
     const subject = await SubjectModel.findById(subjectId)
     if (!subject) {
       throw new Error('Matéria não encontrada.')
     }
 
-    const question = await new QuestionModel({ questionText, resolution, subjectId }).save()
+    console.log(tags)
+
+    const question = await new QuestionModel({ questionText, resolution, subjectId, tags }).save()
     subject.questions.push(question._id)
     subject.save()
 
