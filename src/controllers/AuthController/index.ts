@@ -14,19 +14,7 @@ export class AuthController {
   async register(request: Request, response: Response) {
     const { name, email, password } = request.body
 
-    if (!name) {
-      throw new Error('Insira um nome válido.')
-    }
-
-    if (!email) {
-      throw new Error('Insira um email válido.')
-    }
-
-    if (!password) {
-      throw new Error('Insira uma senha válida.')
-    }
-
-    if (password && password.length < 6) {
+    if (password.length < 6) {
       throw new Error('Sua senha precisa ter 6 caracteres no mínimo.')
     }
 
@@ -48,6 +36,9 @@ export class AuthController {
     const { user_id } = request
 
     const user = await UserModel.findByIdAndUpdate(user_id, { confirmed: true })
+    if (!user) {
+      throw new Error('Usuário não encontrado.')
+    }
     if (user.confirmed) {
       throw new Error('Usuário já confirmado.')
     }

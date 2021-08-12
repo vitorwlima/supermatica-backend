@@ -14,12 +14,12 @@ export const ensureAdmin = async (request: Request, response: Response, next: Ne
   }
 
   try {
-    const userInfo = verify(token, process.env.TOKEN_HASH)
+    const userInfo = verify(token, process.env.TOKEN_HASH!)
 
     request.user_id = userInfo.sub as string
 
-    const { admin } = await UserModel.findById(request.user_id)
-    if (admin) {
+    const user = await UserModel.findById(request.user_id)
+    if (user?.admin) {
       return next()
     }
 

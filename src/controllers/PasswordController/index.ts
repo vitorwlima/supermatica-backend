@@ -8,10 +8,14 @@ export class PasswordController {
   async sendChangePassword(request: Request, response: Response) {
     const { user_id } = request
 
-    const { email, name } = await UserModel.findById(user_id)
+    const user = await UserModel.findById(user_id)
+    if (!user) {
+      throw new Error('Usuário não encontrado.')
+    }
+
     const token = generateChangePasswordToken(user_id)
 
-    await sendChangePasswordEmail({ email, name, token })
+    await sendChangePasswordEmail({ email: user.email, name: user.name, token })
 
     return response.end()
   }
@@ -21,10 +25,13 @@ export class PasswordController {
     const { password, urlToken } = request.body
 
     try {
-      const { sub } = verify(urlToken, process.env.TOKEN_HASH)
+      const { sub } = verify(urlToken, process.env.TOKEN_HASH!)
 
       const userReceived = await UserModel.findById(user_id)
       const userToken = await UserModel.findById(sub)
+      if (!userReceived || !userToken) {
+        throw new Error('Usuário não encontrado.')
+      }
 
       if (userToken._id.toString() !== userReceived._id.toString()) {
         return response.status(401).end()
@@ -60,7 +67,7 @@ export class PasswordController {
     const { password, urlToken } = request.body
 
     try {
-      const { sub } = verify(urlToken, process.env.TOKEN_HASH)
+      const { sub } = verify(urlToken, process.env.TOKEN_HASH!)
 
       const passwordHash = await hash(password, 8)
 

@@ -8,7 +8,6 @@ export const handleError = (err: Error, request: Request, response: Response, ne
   }
 
   return response.status(500).json({
-    status: 'error',
-    message: 'Internal server error.',
+    error: 'Internal server error.',
   })
 }

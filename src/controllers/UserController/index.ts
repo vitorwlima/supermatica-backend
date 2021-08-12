@@ -20,9 +20,12 @@ export class UserController {
       throw new Error('Insira uma mensagem válida.')
     }
 
-    const { name, email } = await UserModel.findById(user_id)
+    const user = await UserModel.findById(user_id)
+    if (!user) {
+      throw new Error('Usuário não encontrado.')
+    }
 
-    await sendContactMessage({ name, email, message })
+    await sendContactMessage({ name: user!.name, email: user!.email, message })
 
     return response.end()
   }

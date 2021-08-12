@@ -10,8 +10,6 @@ export class QuestionController {
       throw new Error('Matéria não encontrada.')
     }
 
-    console.log(tags)
-
     const question = await new QuestionModel({ questionText, resolution, subjectId, tags }).save()
     subject.questions.push(question._id)
     subject.save()
@@ -24,7 +22,7 @@ export class QuestionController {
 
     const question = await QuestionModel.findById(id).populate('alternatives')
     if (!question) {
-      throw new Error('Pergunta não encontrada.')
+      throw new Error('Exercício não encontrado.')
     }
 
     return response.json(question)
@@ -34,6 +32,9 @@ export class QuestionController {
     const { slug } = request.params
 
     const subject = await SubjectModel.findOne({ slug })
+    if (!subject) {
+      throw new Error('Conteúdo não encontrado.')
+    }
 
     const questions = await QuestionModel.find({ subjectId: subject._id })
 
@@ -45,6 +46,10 @@ export class QuestionController {
     const data = request.body
 
     const question = await QuestionModel.findByIdAndUpdate(id, data, { new: true, runValidators: true })
+    if (!question) {
+      throw new Error('Exercício não encontrado.')
+    }
+
     question.alternatives = []
     question.save()
 
@@ -61,6 +66,10 @@ export class QuestionController {
       }
 
       const subject = await SubjectModel.findById(question.subjectId)
+      if (!subject) {
+        throw new Error('Conteúdo não encontrado.')
+      }
+
       subject.questions = subject.questions.filter(id => id.toString() !== question._id.toString())
       subject.save()
 
@@ -77,6 +86,10 @@ export class QuestionController {
     const { questionId, isCorrect } = request.body
 
     const user = await UserModel.findById(user_id)
+    if (!user) {
+      throw new Error('Usuário não encontrado.')
+    }
+
     if (user.answeredQuestions.some(question => question.questionId === questionId)) {
       return response.end()
     }

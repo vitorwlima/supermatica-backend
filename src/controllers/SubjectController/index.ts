@@ -1,6 +1,7 @@
 import { Request, Response } from 'express'
 import slugify from 'slugify'
 import { AlternativeModel, QuestionModel, SubjectModel } from '../../models'
+
 export class SubjectController {
   async createSubject(request: Request, response: Response) {
     const { subjectText } = request.body

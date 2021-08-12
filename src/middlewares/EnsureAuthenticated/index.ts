@@ -13,7 +13,7 @@ export const ensureAuthenticated = (request: Request, response: Response, next: 
   }
 
   try {
-    const userInfo = verify(token, process.env.TOKEN_HASH)
+    const userInfo = verify(token, process.env.TOKEN_HASH!)
 
     request.user_id = userInfo.sub as string
 
